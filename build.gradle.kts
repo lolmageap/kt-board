@@ -31,6 +31,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 	runtimeOnly("com.mysql:mysql-connector-j")
+
 	testImplementation("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:5.6.2")
@@ -48,4 +49,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.named<Jar>("jar") {
+	enabled = false
 }
