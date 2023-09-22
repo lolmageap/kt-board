@@ -1,5 +1,6 @@
 package com.study.ktboard.service
 
+import com.study.ktboard.exception.PostNotDeletableException
 import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.repository.PostRepository
 import com.study.ktboard.service.dto.PostCreateRequestDto
@@ -26,6 +27,17 @@ class PostService(
             ?:throw PostNotFoundException()
 
         post.update(requestDto)
+        return id
+    }
+
+    @Transactional(readOnly = false)
+    fun deletePost(id: Long, deletedBy: String): Long {
+        val post = postRepository.findByIdOrNull(id)
+            ?:throw PostNotFoundException()
+
+        if (post.createdBy != deletedBy) throw PostNotDeletableException()
+
+        postRepository.delete(post)
         return id
     }
 
