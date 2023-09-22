@@ -6,12 +6,14 @@ import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.exception.PostNotUpdatableException
 import com.study.ktboard.repository.PostRepository
 import com.study.ktboard.service.dto.PostCreateRequestDto
+import com.study.ktboard.service.dto.PostSearchRequestDto
 import com.study.ktboard.service.dto.PostUpdateRequestDto
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
@@ -131,7 +133,7 @@ class PostServiceTest(
             }
         }
         When("게시글이 없으면") {
-            then("게시글을 찾을 수 없다는 예외가 발생한다..") {
+            then("게시글을 찾을 수 없다는 예외가 발생한다.") {
                 shouldThrow<PostNotFoundException> {
                     postService.getPost(-1L)
                 }
@@ -140,18 +142,51 @@ class PostServiceTest(
     }
 
     given("게시글 목록조회시") {
-        val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+        postRepository.saveAll(
+            listOf(
+                Post(title = "title1", content = "content", createdBy = "cherhy"),
+                Post(title = "title2", content = "content", createdBy = "cherhy"),
+                Post(title = "title3", content = "content", createdBy = "cherhy"),
+                Post(title = "title4", content = "content", createdBy = "cherhy"),
+                Post(title = "title5", content = "content", createdBy = "cherhy"),
+                Post(title = "title6", content = "content", createdBy = "cherhy2"),
+                Post(title = "title7", content = "content", createdBy = "cherhy2"),
+                Post(title = "title8", content = "content", createdBy = "cherhy2"),
+                Post(title = "title9", content = "content", createdBy = "cherhy2"),
+                Post(title = "title10", content = "content", createdBy = "cherhy2"),
+            )
+        )
+
         When("정상 조회시") {
             val all = postService.getPosts(PageRequest.of(0, 5))
             then("게시글 페이지가 반환된다.") {
-                all.
+                all.number shouldBe 0
+                all.size shouldBe 5
+                all.content.size shouldBe 5
+                all.content[0].title shouldContain "title"
+                all.content[0].createdBy shouldContain "cherhy"
             }
         }
-        When("게시글이 없으면") {
-            then("게시글을 찾을 수 없다는 예외가 발생한다..") {
-                shouldThrow<PostNotFoundException> {
-                    postService.getPost(-1L)
-                }
+
+        When("타이틀로 검색") {
+            val all = postService.getPosts(PageRequest.of(0, 5), PostSearchRequestDto(title = "title1"))
+            then("타이틀에 해당하는 게시글이 반환된다.") {
+                all.number shouldBe 0
+                all.size shouldBe 5
+                all.content.size shouldBe 2
+                all.content[0].title shouldContain "title1"
+                all.content[0].createdBy shouldContain "cherhy"
+            }
+        }
+
+        When("작성자로 검색") {
+            val all = postService.getPosts(PageRequest.of(0, 5), PostSearchRequestDto(createdBy = "cherhy2"))
+            then("타이틀에 해당하는 게시글이 반환된다.") {
+                all.number shouldBe 0
+                all.size shouldBe 5
+                all.content.size shouldBe 5
+                all.content[0].title shouldContain "title"
+                all.content[0].createdBy shouldContain "cherhy2"
             }
         }
     }
