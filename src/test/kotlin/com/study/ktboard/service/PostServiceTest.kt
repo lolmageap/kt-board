@@ -1,6 +1,7 @@
 package com.study.ktboard.service
 
 import com.study.ktboard.domain.Post
+import com.study.ktboard.exception.PostNotDeletableException
 import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.exception.PostNotUpdatableException
 import com.study.ktboard.repository.PostRepository
@@ -26,7 +27,7 @@ class PostServiceTest(
                 PostCreateRequestDto(
                     title = "제목",
                     content = "내용",
-                    createBy = "cherhy",
+                    createdBy = "cherhy",
                 )
             )
 
@@ -34,9 +35,9 @@ class PostServiceTest(
                 postId shouldBeGreaterThan 0L
                 val post = postRepository.findByIdOrNull(postId)
                 post shouldNotBe null
-                post shouldBe "제목"
-                post shouldBe "내용"
-                post shouldBe "cherhy"
+                post?.title shouldBe "제목"
+                post?.content shouldBe "내용"
+                post?.createdBy shouldBe "cherhy"
             }
 
         }
@@ -56,10 +57,10 @@ class PostServiceTest(
             then("게시글이 정상적으로 수정됨을 확인한다.") {
                 post.id shouldBe updatedId
                 val find = postRepository.findByIdOrNull(updatedId)
-                post shouldNotBe null
-                post shouldBe "update title"
-                post shouldBe "update content"
-                post shouldBe "update createBy"
+                find shouldNotBe null
+                find?.title shouldBe "update title"
+                find?.content shouldBe "update content"
+                find?.createdBy shouldBe "update createBy"
             }
         }
 
@@ -71,19 +72,18 @@ class PostServiceTest(
                         PostUpdateRequestDto(
                             title = "update title",
                             content = "update content",
-                            updatedBy = "update createBy",
+                            updatedBy = "cherhy",
                         )
                     )
                 }
             }
-
         }
 
         When("작성자가 동일하지 않으면") {
             then("수정할 수 없는 게시물입니다 예외가 발생한다.") {
                 shouldThrow<PostNotUpdatableException> {
                     postService.updatePost(
-                        -1L,
+                        post.id,
                         PostUpdateRequestDto(
                             title = "update title",
                             content = "update content",
@@ -92,8 +92,29 @@ class PostServiceTest(
                     )
                 }
             }
-
         }
+    }
 
+    given("게시글 삭제시") {
+        When("정상 삭제시") {
+            val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+            val deletedId = postService.deletePost(
+                post.id, "cherhy"
+            )
+
+            then("게시글이 정상적으로 삭제됨을 확인한다.") {
+                post.id shouldBe deletedId
+                val find = postRepository.findByIdOrNull(deletedId)
+                find shouldBe null
+            }
+        }
+        When("작성자가 동일하지 않으면") {
+            val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+            then("삭제할 수 없는 게시물입니다 에러가 발생한다.") {
+                shouldThrow<PostNotDeletableException> {
+                    postService.deletePost(post.id, "username")
+                }
+            }
+        }
     }
 })
