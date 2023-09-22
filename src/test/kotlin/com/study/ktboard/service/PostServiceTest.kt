@@ -13,6 +13,7 @@ import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
@@ -113,6 +114,43 @@ class PostServiceTest(
             then("삭제할 수 없는 게시물입니다 에러가 발생한다.") {
                 shouldThrow<PostNotDeletableException> {
                     postService.deletePost(post.id, "username")
+                }
+            }
+        }
+    }
+
+    given("게시글 상세조회시") {
+        val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+        When("정상 조회시") {
+            val find = postService.getPost(post.id)
+            then("게시글이 정상적으로 조회됨을 확인한다.") {
+                find.id shouldBe post.id
+                find.title shouldBe "title"
+                find.content shouldBe "content"
+                find.createdBy shouldBe "cherhy"
+            }
+        }
+        When("게시글이 없으면") {
+            then("게시글을 찾을 수 없다는 예외가 발생한다..") {
+                shouldThrow<PostNotFoundException> {
+                    postService.getPost(-1L)
+                }
+            }
+        }
+    }
+
+    given("게시글 목록조회시") {
+        val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+        When("정상 조회시") {
+            val all = postService.getPosts(PageRequest.of(0, 5))
+            then("게시글 페이지가 반환된다.") {
+                all.
+            }
+        }
+        When("게시글이 없으면") {
+            then("게시글을 찾을 수 없다는 예외가 발생한다..") {
+                shouldThrow<PostNotFoundException> {
+                    postService.getPost(-1L)
                 }
             }
         }
