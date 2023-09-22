@@ -14,4 +14,3 @@ fun PostUpdateRequest.toPostUpdateRequestDto(): PostUpdateRequestDto =
         updatedBy = this.modifiedBy,
         content = this.content,
     )
-
