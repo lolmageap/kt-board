@@ -3,10 +3,7 @@ package com.study.ktboard.service
 import com.study.ktboard.exception.PostNotDeletableException
 import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.repository.PostRepository
-import com.study.ktboard.service.dto.PostCreateRequestDto
-import com.study.ktboard.service.dto.PostDetailResponseDto
-import com.study.ktboard.service.dto.PostUpdateRequestDto
-import com.study.ktboard.service.dto.toPost
+import com.study.ktboard.service.dto.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
@@ -47,9 +44,12 @@ class PostService(
             ?.let(PostDetailResponseDto::toDetailResponseDto)
             ?: throw PostNotFoundException()
 
-    fun getPosts(pageable: PageRequest): Page<PostDetailResponseDto> =
-        postRepository.findAll(pageable)
-            .let { PostDetailResponseDto::toDetailResponseDto }
+    fun getPosts(pageRequest: PageRequest): Page<PostDetailResponseDto> =
+        postRepository.findAll(pageRequest)
+            .map(PostDetailResponseDto::toDetailResponseDto)
 
+    fun getPosts(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<PostDetailResponseDto> =
+        postRepository.findAll(pageRequest, postSearchRequestDto)
+            .map(PostDetailResponseDto::toDetailResponseDto)
 
 }
