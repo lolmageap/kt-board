@@ -11,17 +11,14 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 class PostService(
     private val postRepository: PostRepository
 ) {
 
-    @Transactional(readOnly = false)
     fun createPost(requestDto: PostCreateRequestDto): Long =
         postRepository.save(requestDto.toPost()).id
 
-
-    @Transactional(readOnly = false)
     fun updatePost(id: Long, requestDto: PostUpdateRequestDto): Long {
         val post = postRepository.findByIdOrNull(id) ?: throw PostNotFoundException()
 
@@ -29,9 +26,8 @@ class PostService(
         return id
     }
 
-    @Transactional(readOnly = false)
     fun deletePost(id: Long, deletedBy: String): Long {
-        val post = postRepository.findByIdOrNull(id) ?:throw PostNotFoundException()
+        val post = postRepository.findByIdOrNull(id) ?: throw PostNotFoundException()
 
         if (post.createdBy != deletedBy) throw PostNotDeletableException()
 
@@ -39,7 +35,7 @@ class PostService(
         return id
     }
 
-    fun getPost(id: Long) : PostDetailResponseDto =
+    fun getPost(id: Long): PostDetailResponseDto =
         postRepository.findByIdOrNull(id)
             ?.let(PostDetailResponseDto::toDetailResponseDto)
             ?: throw PostNotFoundException()
@@ -51,5 +47,4 @@ class PostService(
     fun getPosts(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<PostDetailResponseDto> =
         postRepository.findAll(pageRequest, postSearchRequestDto)
             .map(PostDetailResponseDto::toDetailResponseDto)
-
 }

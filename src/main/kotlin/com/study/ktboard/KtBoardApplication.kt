@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class KtBoardApplication
 
 fun main(args: Array<String>) {
-	runApplication<KtBoardApplication>(*args)
+    runApplication<KtBoardApplication>(*args)
 }

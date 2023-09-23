@@ -42,7 +42,6 @@ class PostServiceTest(
                 post?.content shouldBe "내용"
                 post?.createdBy shouldBe "cherhy"
             }
-
         }
     }
     given("게시글 수정시") {
@@ -102,7 +101,8 @@ class PostServiceTest(
         When("정상 삭제시") {
             val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
             val deletedId = postService.deletePost(
-                post.id, "cherhy"
+                post.id,
+                "cherhy",
             )
 
             then("게시글이 정상적으로 삭제됨을 확인한다.") {
@@ -153,7 +153,7 @@ class PostServiceTest(
                 Post(title = "title7", content = "content", createdBy = "cherhy2"),
                 Post(title = "title8", content = "content", createdBy = "cherhy2"),
                 Post(title = "title9", content = "content", createdBy = "cherhy2"),
-                Post(title = "title10", content = "content", createdBy = "cherhy2"),
+                Post(title = "title10", content = "content", createdBy = "cherhy2")
             )
         )
 
