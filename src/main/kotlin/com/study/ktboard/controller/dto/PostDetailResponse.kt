@@ -17,7 +17,9 @@ data class PostDetailResponse(
                 title = postDetailResponseDto.title,
                 content = postDetailResponseDto.content,
                 createdBy = postDetailResponseDto.createdBy,
-                createdAt = postDetailResponseDto.createdAt.toString()
+                createdAt = postDetailResponseDto.createdAt.toString(),
+                comments = postDetailResponseDto.comments.map(CommentResponse::toResponse),
             )
+
     }
 }
