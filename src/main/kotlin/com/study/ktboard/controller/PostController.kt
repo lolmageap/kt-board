@@ -38,14 +38,15 @@ class PostController(
 
     @GetMapping
     fun getPost(
-        @PageableDefault(page = 0, size = 10) pageRequest: PageRequest
+        @PageableDefault(page = 0, size = 10) pageRequest: PageRequest,
+        postSearchRequest: PostSearchRequest,
     ): Page<PostDetailResponse> =
-        postService.getPosts(pageRequest)
+        postService.getPosts(pageRequest, postSearchRequest.toSearchRequestDto())
             .map(PostDetailResponse::toPostDetailResponse)
 
     @GetMapping("/{id}")
     fun getPosts(
-        @PathVariable id: Long
+        @PathVariable id: Long,
     ): PostDetailResponse =
         postService.getPost(id)
             .let(PostDetailResponse::toPostDetailResponse)
