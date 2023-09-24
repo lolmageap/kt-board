@@ -22,6 +22,7 @@ class CommentServiceTest(
     private val commentService: CommentService,
     private val commentRepository: CommentRepository,
     private val postRepository: PostRepository,
+    private val postService: PostService,
 ) : BehaviorSpec({
     given("댓글 생성시") {
         val post = postRepository.save(
@@ -130,4 +131,38 @@ class CommentServiceTest(
             }
         }
     }
+
+    given("댓글 상세 조회시") {
+        val post = postRepository.save(
+            Post(
+                title = "제목",
+                content = "게시물 내용",
+                createdBy = "게시물 생성자",
+            )
+        )
+
+        When("댓글 추가시") {
+            val saveComment = commentRepository.saveAll(
+                listOf(
+                    Comment(content = "댓글1 내용", createdBy = "댓글1 생성자", post = post),
+                    Comment(content = "댓글2 내용", createdBy = "댓글2 생성자", post = post),
+                    Comment(content = "댓글3 내용", createdBy = "댓글3 생성자", post = post),
+                )
+            )
+
+            val findPost = postService.getPost(post.id)
+
+            then("댓글이 함께 조회됨을 확인한다.") {
+                findPost.comments.size shouldBe 3
+                findPost.comments[0].content shouldBe "댓글1 내용"
+                findPost.comments[1].content shouldBe "댓글2 내용"
+                findPost.comments[2].content shouldBe "댓글3 내용"
+                findPost.comments[0].createdBy shouldBe "댓글1 생성자"
+                findPost.comments[1].createdBy shouldBe "댓글2 생성자"
+                findPost.comments[2].createdBy shouldBe "댓글3 생성자"
+            }
+        }
+
+    }
+
 })
