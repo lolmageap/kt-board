@@ -8,7 +8,8 @@ data class PostDetailResponseDto(
     val title: String,
     val content: String,
     val createdBy: String,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val comments: List<CommentResponseDto>,
 ) {
     companion object {
 
@@ -18,7 +19,8 @@ data class PostDetailResponseDto(
                 title = post.title,
                 content = post.content,
                 createdBy = post.createdBy,
-                createdAt = post.createdAt
+                createdAt = post.createdAt,
+                comments = post.comments.map(CommentResponseDto::toResponseDto),
             )
     }
 }
