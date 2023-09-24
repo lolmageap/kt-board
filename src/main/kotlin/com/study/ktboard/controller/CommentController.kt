@@ -2,14 +2,12 @@ package com.study.ktboard.controller
 
 import com.study.ktboard.controller.dto.*
 import com.study.ktboard.service.CommentService
-import com.study.ktboard.controller.dto.CommentCreateRequest
-import com.study.ktboard.controller.dto.CommentUpdateRequest
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/posts/{postId}/comments")
 class CommentController(
-    private val commentService: CommentService
+    private val commentService: CommentService,
 ) {
 
     @PostMapping
