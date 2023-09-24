@@ -8,7 +8,8 @@ data class PostDetailResponse(
     val content: String,
     val createdBy: String,
     val createdAt: String,
-    val comments: List<CommentResponse> = emptyList()
+    val comments: List<CommentResponse> = emptyList(),
+    val tags: List<String> = emptyList(),
 ) {
     companion object {
         fun toPostDetailResponse(postDetailResponseDto: PostDetailResponseDto): PostDetailResponse =
