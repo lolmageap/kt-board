@@ -13,5 +13,6 @@ fun PostCreateRequestDto.toPost(): Post =
     Post(
         title = this.title,
         createdBy = this.createdBy,
-        content = this.content
+        content = this.content,
+        tags = this.tags,
     )
