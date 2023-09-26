@@ -16,8 +16,9 @@ class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport
     override fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post> {
         val result = from(post)
             .where(
-                postSearchRequestDto.title?.let { post.title.contains(postSearchRequestDto.title) },
-                postSearchRequestDto.createdBy?.let { post.createdBy.eq(postSearchRequestDto.createdBy) },
+                postSearchRequestDto.title?.let { post.title.contains(it) },
+                postSearchRequestDto.createdBy?.let { post.createdBy.eq(it) },
+                postSearchRequestDto.tag?.let { post.tags.any().name.eq(it) },
             )
             .orderBy(post.createdAt.desc())
             .offset(pageRequest.offset)
