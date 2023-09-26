@@ -10,6 +10,7 @@ data class PostDetailResponseDto(
     val createdBy: String,
     val createdAt: LocalDateTime,
     val comments: List<CommentResponseDto>,
+    val tags: List<String>,
 ) {
     companion object {
 
@@ -21,6 +22,7 @@ data class PostDetailResponseDto(
                 createdBy = post.createdBy,
                 createdAt = post.createdAt,
                 comments = post.comments.map(CommentResponseDto::toResponseDto),
+                tags = post.tags.map { it.name },
             )
     }
 }
