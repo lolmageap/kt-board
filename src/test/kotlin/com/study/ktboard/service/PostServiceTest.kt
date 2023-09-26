@@ -1,6 +1,7 @@
 package com.study.ktboard.service
 
 import com.study.ktboard.domain.Post
+import com.study.ktboard.domain.Tag
 import com.study.ktboard.exception.PostNotDeletableException
 import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.exception.PostNotUpdatableException
@@ -183,15 +184,31 @@ class PostServiceTest(
 
     given("게시글 상세조회시") {
         val post = postRepository.save(Post(title = "title", content = "content", createdBy = "cherhy"))
+        tagRepository.saveAll(
+            listOf(
+                Tag(name="tag1", post=post, createdBy = "cherhy"),
+                Tag(name="tag2", post=post, createdBy = "cherhy"),
+                Tag(name="tag3", post=post, createdBy = "cherhy"),
+            )
+        )
         When("정상 조회시") {
             val find = postService.getPost(post.id)
+
             then("게시글이 정상적으로 조회됨을 확인한다.") {
                 find.id shouldBe post.id
                 find.title shouldBe "title"
                 find.content shouldBe "content"
                 find.createdBy shouldBe "cherhy"
             }
+
+            then("태그가 정상적으로 조회됨을 확인한다.") {
+                find.tags.size shouldBe 3
+                find.tags[0] shouldBe "tag1"
+                find.tags[1] shouldBe "tag2"
+                find.tags[2] shouldBe "tag3"
+            }
         }
+
         When("게시글이 없으면") {
             then("게시글을 찾을 수 없다는 예외가 발생한다.") {
                 shouldThrow<PostNotFoundException> {
@@ -204,16 +221,16 @@ class PostServiceTest(
     given("게시글 목록조회시") {
         postRepository.saveAll(
             listOf(
-                Post(title = "title1", content = "content", createdBy = "cherhy"),
-                Post(title = "title2", content = "content", createdBy = "cherhy"),
-                Post(title = "title3", content = "content", createdBy = "cherhy"),
-                Post(title = "title4", content = "content", createdBy = "cherhy"),
-                Post(title = "title5", content = "content", createdBy = "cherhy"),
-                Post(title = "title6", content = "content", createdBy = "cherhy2"),
-                Post(title = "title7", content = "content", createdBy = "cherhy2"),
-                Post(title = "title8", content = "content", createdBy = "cherhy2"),
-                Post(title = "title9", content = "content", createdBy = "cherhy2"),
-                Post(title = "title10", content = "content", createdBy = "cherhy2")
+                Post(title = "title1", content = "content", createdBy = "cherhy", tags = listOf("tag1", "tag2")),
+                Post(title = "title2", content = "content", createdBy = "cherhy", tags = listOf("tag1", "tag2")),
+                Post(title = "title3", content = "content", createdBy = "cherhy", tags = listOf("tag1", "tag2")),
+                Post(title = "title4", content = "content", createdBy = "cherhy", tags = listOf("tag1", "tag2")),
+                Post(title = "title5", content = "content", createdBy = "cherhy", tags = listOf("tag1", "tag2")),
+                Post(title = "title6", content = "content", createdBy = "cherhy2", tags = listOf("tag1", "tag2")),
+                Post(title = "title7", content = "content", createdBy = "cherhy2", tags = listOf("tag1", "tag2")),
+                Post(title = "title8", content = "content", createdBy = "cherhy2", tags = listOf("tag1", "tag2")),
+                Post(title = "title9", content = "content", createdBy = "cherhy2", tags = listOf("tag1", "tag2")),
+                Post(title = "title10", content = "content", createdBy = "cherhy2", tags = listOf("tag1", "tag2")),
             )
         )
 
@@ -247,6 +264,22 @@ class PostServiceTest(
                 all.content.size shouldBe 5
                 all.content[0].title shouldContain "title"
                 all.content[0].createdBy shouldContain "cherhy2"
+            }
+
+            then("첫번째 태그가 함께 조회됨을 확인한다.") {
+                all.content.forEach {
+                    it.firstTag shouldBe "tag1"
+                }
+            }
+        }
+        When("태그로 검색") {
+            val all = postService.getPosts(PageRequest.of(0, 5), PostSearchRequestDto(tag = "tag1"))
+
+            then("태그에 해당하는 게시글이 반환된다.") {
+                all.number shouldBe 0
+                all.size shouldBe 0
+                all.content.size shouldBe 0
+                all.content[0].title shouldBe 0
             }
         }
     }
