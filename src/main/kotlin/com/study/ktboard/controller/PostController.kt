@@ -37,15 +37,15 @@ class PostController(
     }
 
     @GetMapping
-    fun getPost(
+    fun getPosts(
         @PageableDefault(page = 0, size = 10) pageRequest: PageRequest,
         postSearchRequest: PostSearchRequest,
-    ): Page<PostDetailResponse> =
+    ): Page<PostSummaryResponse> =
         postService.getPosts(pageRequest, postSearchRequest.toSearchRequestDto())
-            .map(PostDetailResponse::toPostDetailResponse)
+            .map(PostSummaryResponse::toPostSummaryResponse)
 
     @GetMapping("/{id}")
-    fun getPosts(
+    fun getPost(
         @PathVariable id: Long,
     ): PostDetailResponse =
         postService.getPost(id)

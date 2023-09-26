@@ -40,11 +40,11 @@ class PostService(
             ?.let(PostDetailResponseDto::toDetailResponseDto)
             ?: throw PostNotFoundException()
 
-    fun getPosts(pageRequest: PageRequest): Page<PostDetailResponseDto> =
+    fun getPosts(pageRequest: PageRequest): Page<PostSummaryResponseDto> =
         postRepository.findAll(pageRequest)
-            .map(PostDetailResponseDto::toDetailResponseDto)
+            .map(PostSummaryResponseDto::toSummaryResponseDto)
 
-    fun getPosts(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<PostDetailResponseDto> =
+    fun getPosts(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> =
         postRepository.findAll(pageRequest, postSearchRequestDto)
-            .map(PostDetailResponseDto::toDetailResponseDto)
+            .map(PostSummaryResponseDto::toSummaryResponseDto)
 }
