@@ -15,6 +15,6 @@ class LikeController(
         @PathVariable postId: Long,
         @RequestParam createdBy: String,
     ): Long =
-        1L
+        likeService.createLike(postId, createdBy)
 
 }
