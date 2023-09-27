@@ -23,8 +23,8 @@ Content-Type: application/json
 ### 게시글 삭제
 DELETE /localhost:8080/posts/1?deletedBy=cherHyJung
 
-### 게시글 조회
-GET /localhost:8080/posts
+### 게시글 목록조회
+GET /localhost:8080/posts?content=content&createdBy=minJiKim&tag=tag1
 
 ### 게시글 상세조회
 GET /localhost:8080/posts/1
