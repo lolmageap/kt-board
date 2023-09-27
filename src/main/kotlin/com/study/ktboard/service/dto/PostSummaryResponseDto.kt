@@ -8,11 +8,12 @@ data class PostSummaryResponseDto(
     val content: String,
     val createdBy: String,
     val createdAt: String,
-    val firstTag: String?
+    val firstTag: String?,
+    val likeCount: Long = 0,
 ) {
     companion object {
 
-        fun toSummaryResponseDto(post: Post) =
+        fun toSummaryResponseDto(post: Post, likeCount: Long = 0L) =
             PostSummaryResponseDto(
                 id = post.id,
                 title = post.title,
@@ -20,6 +21,7 @@ data class PostSummaryResponseDto(
                 createdBy = post.createdBy,
                 createdAt = post.createdAt.toString(),
                 firstTag = post.tags.firstOrNull()?.name,
+                likeCount = likeCount,
             )
     }
 }

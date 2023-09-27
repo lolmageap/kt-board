@@ -11,10 +11,11 @@ data class PostDetailResponseDto(
     val createdAt: LocalDateTime,
     val comments: List<CommentResponseDto>,
     val tags: List<String>,
+    val likeCount: Long = 0,
 ) {
     companion object {
 
-        fun toDetailResponseDto(post: Post) =
+        fun toDetailResponseDto(post: Post, likeCount: Long) =
             PostDetailResponseDto(
                 id = post.id,
                 title = post.title,
@@ -23,6 +24,7 @@ data class PostDetailResponseDto(
                 createdAt = post.createdAt,
                 comments = post.comments.map(CommentResponseDto::toResponseDto),
                 tags = post.tags.map { it.name },
+                likeCount = likeCount
             )
     }
 }

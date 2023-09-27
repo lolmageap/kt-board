@@ -20,7 +20,7 @@ data class PostSummaryResponse(
                 createdBy = postSummaryResponseDto.createdBy,
                 createdAt = postSummaryResponseDto.createdAt,
                 firstTag = postSummaryResponseDto.firstTag,
-//                likeCount = postSummaryResponseDto.likeCount,
+                likeCount = postSummaryResponseDto.likeCount,
             )
 
     }

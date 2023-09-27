@@ -21,7 +21,8 @@ data class PostDetailResponse(
                 createdBy = postDetailResponseDto.createdBy,
                 createdAt = postDetailResponseDto.createdAt.toString(),
                 comments = postDetailResponseDto.comments.map(CommentResponse::toResponse),
-            )
+                likeCount = postDetailResponseDto.likeCount,
+                )
 
     }
 }
