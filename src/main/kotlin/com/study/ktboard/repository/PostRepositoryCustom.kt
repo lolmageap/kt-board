@@ -13,8 +13,9 @@ interface PostRepositoryCustom {
 }
 
 class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport(Post::class.java) {
-    override fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post> {
-        val result = from(post)
+    override fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post> =
+        from(post)
+            .leftJoin(post.tags).fetchJoin()
             .where(
                 postSearchRequestDto.title?.let { post.title.contains(it) },
                 postSearchRequestDto.createdBy?.let { post.createdBy.eq(it) },
@@ -24,7 +25,8 @@ class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport
             .offset(pageRequest.offset)
             .limit(pageRequest.pageSize.toLong())
             .fetchResults()
+            .let {
+                PageImpl(it.results, pageRequest, it.total)
+            }
 
-        return PageImpl(result.results, pageRequest, result.total)
-    }
 }
