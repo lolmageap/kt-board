@@ -9,6 +9,7 @@ data class PostSummaryResponse(
     val createdBy: String,
     val createdAt: String,
     val firstTag: String?,
+    val likeCount: Long = 0
 ) {
     companion object {
         fun toPostSummaryResponse(postSummaryResponseDto: PostSummaryResponseDto): PostSummaryResponse =
@@ -19,6 +20,7 @@ data class PostSummaryResponse(
                 createdBy = postSummaryResponseDto.createdBy,
                 createdAt = postSummaryResponseDto.createdAt,
                 firstTag = postSummaryResponseDto.firstTag,
+//                likeCount = postSummaryResponseDto.likeCount,
             )
 
     }
