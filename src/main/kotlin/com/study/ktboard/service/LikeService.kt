@@ -17,10 +17,10 @@ class LikeService(
 
     fun createLike(postId: Long, createdBy: String): Long {
         val post = postRepository.findByIdOrNull(postId) ?: throw PostNotFoundException()
-        return likeRepository.save(
-            Like(post, createdBy)
-        ).id
+        return likeRepository.save( Like(post, createdBy) ).id
     }
 
+    fun countLike(postId: Long): Long =
+        likeRepository.countByPostId(postId)
 
 }
