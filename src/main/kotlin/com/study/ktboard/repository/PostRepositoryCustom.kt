@@ -2,6 +2,7 @@ package com.study.ktboard.repository
 
 import com.study.ktboard.domain.Post
 import com.study.ktboard.domain.QPost.post
+import com.study.ktboard.domain.QTag.*
 import com.study.ktboard.service.dto.PostSearchRequestDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -15,7 +16,7 @@ interface PostRepositoryCustom {
 class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport(Post::class.java) {
     override fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post> =
         from(post)
-            .leftJoin(post.tags).fetchJoin()
+            .leftJoin(post.tags, tag).fetchJoin()
             .where(
                 postSearchRequestDto.title?.let { post.title.contains(it) },
                 postSearchRequestDto.createdBy?.let { post.createdBy.eq(it) },
