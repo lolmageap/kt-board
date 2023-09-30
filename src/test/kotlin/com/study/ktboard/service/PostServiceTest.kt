@@ -12,6 +12,7 @@ import com.study.ktboard.service.dto.PostSearchRequestDto
 import com.study.ktboard.service.dto.PostUpdateRequestDto
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.extensions.testcontainers.perSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -19,6 +20,7 @@ import io.kotest.matchers.string.shouldContain
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import org.testcontainers.containers.GenericContainer
 
 @SpringBootTest
 class PostServiceTest(
@@ -27,6 +29,16 @@ class PostServiceTest(
     private val tagRepository: TagRepository,
     private val likeService: LikeService,
 ) : BehaviorSpec({
+
+    val redisContainer = GenericContainer<Nothing>("redis:5.0.3-alpine")
+    beforeSpec {
+        redisContainer.portBindings.add("16379:6379")
+        redisContainer.start()
+        listener(redisContainer.perSpec())
+    }
+    afterSpec {
+        redisContainer.stop()
+    }
 
     given("게시글 생성시") {
         When("게시글 인풋이 정상적으로 들어오면") {
