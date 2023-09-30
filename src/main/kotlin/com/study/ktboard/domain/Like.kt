@@ -3,7 +3,7 @@ package com.study.ktboard.domain
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "likes", indexes = [Index(name = "idx_post_id", columnList = "post_id")])
+@Table(name = "likes", indexes = [Index(name = "like_idx_post_id", columnList = "post_id")])
 class Like(
     post: Post,
     createdBy: String,

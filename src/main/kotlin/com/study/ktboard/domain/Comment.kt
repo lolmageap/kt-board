@@ -5,7 +5,7 @@ import com.study.ktboard.service.dto.CommentUpdateRequestDto
 import jakarta.persistence.*
 
 @Entity
-@Table(indexes = [Index(name = "idx_post_id", columnList = "post_id")])
+@Table(indexes = [Index(name = "comment_idx_post_id", columnList = "post_id")])
 class Comment(
     post: Post,
     content: String,

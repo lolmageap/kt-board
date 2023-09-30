@@ -3,7 +3,7 @@ package com.study.ktboard.domain
 import jakarta.persistence.*
 
 @Entity
-@Table(indexes = [Index(name = "idx_post_id", columnList = "post_id")])
+@Table(indexes = [Index(name = "tag_idx_post_id", columnList = "post_id")])
 class Tag(
     name: String,
     post: Post,
