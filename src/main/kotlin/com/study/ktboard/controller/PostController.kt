@@ -3,7 +3,7 @@ package com.study.ktboard.controller
 import com.study.ktboard.controller.dto.*
 import com.study.ktboard.service.PostService
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.*
 
@@ -38,7 +38,7 @@ class PostController(
 
     @GetMapping
     fun getPosts(
-        @PageableDefault(page = 0, size = 10) pageRequest: PageRequest,
+        @PageableDefault(page = 0, size = 10) pageRequest: Pageable,
         postSearchRequest: PostSearchRequest,
     ): Page<PostSummaryResponse> =
         postService.getPosts(pageRequest, postSearchRequest.toSearchRequestDto())

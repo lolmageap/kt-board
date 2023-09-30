@@ -6,15 +6,15 @@ import com.study.ktboard.domain.QTag.*
 import com.study.ktboard.service.dto.PostSearchRequestDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 interface PostRepositoryCustom {
-    fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post>
+    fun findAll(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<Post>
 }
 
 class PostRepositoryCustomImpl : PostRepositoryCustom, QuerydslRepositorySupport(Post::class.java) {
-    override fun findAll(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<Post> =
+    override fun findAll(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<Post> =
         from(post)
             .leftJoin(post.tags, tag).fetchJoin()
             .where(

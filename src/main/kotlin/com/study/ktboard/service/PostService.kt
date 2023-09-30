@@ -5,7 +5,7 @@ import com.study.ktboard.exception.PostNotFoundException
 import com.study.ktboard.repository.PostRepository
 import com.study.ktboard.service.dto.*
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -46,11 +46,11 @@ class PostService(
             }
             ?: throw PostNotFoundException()
 
-    fun getPosts(pageRequest: PageRequest): Page<PostSummaryResponseDto> =
+    fun getPosts(pageRequest: Pageable): Page<PostSummaryResponseDto> =
         postRepository.findAll(pageRequest)
             .map(PostSummaryResponseDto::toSummaryResponseDto)
 
-    fun getPosts(pageRequest: PageRequest, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> =
+    fun getPosts(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> =
         postRepository.findAll(pageRequest, postSearchRequestDto)
             .map {
                 PostSummaryResponseDto.toSummaryResponseDto(
