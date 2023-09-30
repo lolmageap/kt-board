@@ -40,9 +40,9 @@ class LikeServiceTest(
         )
 
         When("인풋이 정상적으로 들어오면") {
-            val likeId = likeService.createLike(post.id, "cherhy")
+            likeService.createLike(post.id, "cherhy")
             then("좋아요가 정상적으로 생성됨을 확인한다.") {
-                val like = likeRepository.findByIdOrNull(likeId)
+                val like = likeRepository.findByIdOrNull(post.id)
                 like shouldNotBe null
                 like?.createdBy shouldBe "cherhy"
             }
